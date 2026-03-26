@@ -90,6 +90,7 @@
             buttonLogin.BackColor = Color.FromArgb(74, 111, 165);
             buttonLogin.FlatStyle = FlatStyle.Flat;
             buttonLogin.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            buttonLogin.ForeColor = Color.White;
             buttonLogin.Location = new Point(110, 272);
             buttonLogin.Name = "buttonLogin";
             buttonLogin.Size = new Size(246, 29);
@@ -103,6 +104,7 @@
             buttonGuest.BackColor = Color.AliceBlue;
             buttonGuest.FlatStyle = FlatStyle.Flat;
             buttonGuest.Font = new Font("Times New Roman", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            buttonGuest.ForeColor = Color.FromArgb(74, 111, 165);
             buttonGuest.Location = new Point(110, 307);
             buttonGuest.Name = "buttonGuest";
             buttonGuest.Size = new Size(246, 29);
@@ -111,7 +113,7 @@
             buttonGuest.UseVisualStyleBackColor = false;
             buttonGuest.Click += buttonGuest_Click;
             // 
-            // Form1
+            // FormLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -124,7 +126,7 @@
             Controls.Add(textBoxLogin);
             Controls.Add(pictureBox1);
             Controls.Add(label1);
-            Name = "Form1";
+            Name = "FormLogin";
             Text = "Вход";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);

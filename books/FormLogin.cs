@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using static System.Windows.Forms.DataFormats;
 
 namespace books
 {
@@ -31,8 +32,10 @@ namespace books
                 {
                     CurrentUser = user;
                     IsGuest = false;
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    //this.DialogResult = DialogResult.OK;
+
+                    FormBooks booksForm = new FormBooks(CurrentUser, IsGuest);
+                    booksForm.ShowDialog();
                 }
                 else
                 {
@@ -46,8 +49,10 @@ namespace books
         {
             CurrentUser = null;
             IsGuest = true;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            //this.DialogResult = DialogResult.OK;
+            //this.Close();
+            FormBooks booksForm = new FormBooks(CurrentUser, IsGuest);
+            booksForm.ShowDialog();
         }
     }
 }
