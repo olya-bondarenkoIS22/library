@@ -1,6 +1,6 @@
 ﻿namespace books
 {
-    partial class Form1
+    partial class FormLogin
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLogin));
             label1 = new Label();
             pictureBox1 = new PictureBox();
             textBoxLogin = new TextBox();
             label2 = new Label();
-            textBox2 = new TextBox();
+            textBoxPassword = new TextBox();
             buttonLogin = new Button();
             buttonGuest = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -77,13 +77,13 @@
             label2.TabIndex = 3;
             label2.Text = "Пароль:";
             // 
-            // textBox2
+            // textBoxPassword
             // 
-            textBox2.Location = new Point(110, 239);
-            textBox2.Name = "textBox2";
-            textBox2.PlaceholderText = "Пароль";
-            textBox2.Size = new Size(246, 27);
-            textBox2.TabIndex = 4;
+            textBoxPassword.Location = new Point(110, 239);
+            textBoxPassword.Name = "textBoxPassword";
+            textBoxPassword.PlaceholderText = "Пароль";
+            textBoxPassword.Size = new Size(246, 27);
+            textBoxPassword.TabIndex = 4;
             // 
             // buttonLogin
             // 
@@ -96,6 +96,7 @@
             buttonLogin.TabIndex = 5;
             buttonLogin.Text = "Войти";
             buttonLogin.UseVisualStyleBackColor = false;
+            buttonLogin.Click += buttonLogin_Click;
             // 
             // buttonGuest
             // 
@@ -108,6 +109,7 @@
             buttonGuest.TabIndex = 6;
             buttonGuest.Text = "Войти как гость";
             buttonGuest.UseVisualStyleBackColor = false;
+            buttonGuest.Click += buttonGuest_Click;
             // 
             // Form1
             // 
@@ -117,7 +119,7 @@
             ClientSize = new Size(466, 358);
             Controls.Add(buttonGuest);
             Controls.Add(buttonLogin);
-            Controls.Add(textBox2);
+            Controls.Add(textBoxPassword);
             Controls.Add(label2);
             Controls.Add(textBoxLogin);
             Controls.Add(pictureBox1);
@@ -135,7 +137,7 @@
         private PictureBox pictureBox1;
         private TextBox textBoxLogin;
         private Label label2;
-        private TextBox textBox2;
+        private TextBox textBoxPassword;
         private Button buttonLogin;
         private Button buttonGuest;
     }
