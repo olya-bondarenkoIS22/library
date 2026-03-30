@@ -32,10 +32,8 @@ namespace books
                 {
                     CurrentUser = user;
                     IsGuest = false;
-                    //this.DialogResult = DialogResult.OK;
-
-                    FormBooks booksForm = new FormBooks(CurrentUser, IsGuest);
-                    booksForm.ShowDialog();
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
                 else
                 {
@@ -49,10 +47,8 @@ namespace books
         {
             CurrentUser = null;
             IsGuest = true;
-            //this.DialogResult = DialogResult.OK;
-            //this.Close();
-            FormBooks booksForm = new FormBooks(CurrentUser, IsGuest);
-            booksForm.ShowDialog();
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

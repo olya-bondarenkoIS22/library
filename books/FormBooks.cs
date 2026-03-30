@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.DataFormats;
 
 namespace books
 {
@@ -30,13 +31,13 @@ namespace books
             colPhoto.Name = "colPhoto";
             colPhoto.ImageLayout = DataGridViewImageCellLayout.Zoom;
             colPhoto.Width = 200;
-            colPhoto.FillWeight = 25;
+            colPhoto.FillWeight = 20;
 
             var colInfoBook = new DataGridViewTextBoxColumn();
             colInfoBook.Name = "colInfoBook";
-            colInfoBook.FillWeight = 55;
+            colInfoBook.FillWeight = 60;
             colInfoBook.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            colInfoBook.DefaultCellStyle.Font = new Font("Times New Roman", 12, FontStyle.Regular);
+            colInfoBook.DefaultCellStyle.Font = new Font("Times New Roman", 16, FontStyle.Regular);
             colInfoBook.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
 
             var colInfoCount = new DataGridViewTextBoxColumn();
@@ -44,7 +45,7 @@ namespace books
             colInfoCount.FillWeight = 20;
             colInfoCount.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             colInfoCount.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colInfoCount.DefaultCellStyle.Font = new Font("Times New Roman", 12, FontStyle.Regular);
+            colInfoCount.DefaultCellStyle.Font = new Font("Times New Roman", 14, FontStyle.Regular);
             colInfoCount.DefaultCellStyle.Padding = new Padding(5);
 
             dataGridViewBook.Columns.AddRange(
@@ -52,8 +53,32 @@ namespace books
                 colInfoBook,
                 colInfoCount
             );
+            LoadRole();
 
+            if (IsGuest)
+            {
+                buttonOrders.Visible = false;
+                buttonCreate.Visible = false;
+                buttonUpdate.Visible = false;
+                buttonDelete.Visible = false;
+            }
+            if (currentUserRole == "Библиотекарь")
+            {
+                buttonCreate.Visible = false;
+                buttonUpdate.Visible = false;
+                buttonDelete.Visible = false;
+            }
+            dataGridViewBook.Columns["colPhoto"].HeaderText = "Изображение";
+            dataGridViewBook.Columns["colInfoBook"].HeaderText = "Информация о книге";
+            dataGridViewBook.Columns["colInfoCount"].HeaderText = "Всего / Доступно";
             LoadBooks();
+        }
+        private void LoadRole()
+        {
+            if (!IsGuest)
+            {
+                currentUserRole = CurrentUser.IdRoleNavigation.RoleName;
+            }
         }
 
         private void LoadBooks()
@@ -78,9 +103,18 @@ namespace books
 
                         // Сохраняем объект товара в Tag строки для удобства
                         row.Tag = book;
-                        row.Cells["colPhoto"].Value = LoadProductImage(book.AddPhotoUrlToSportingGoods);
-                        row.Cells["colInfoProduct"].Value = FormatBookInfo(book);
-                        row.Cells["colInfoDiscount"].Value = $"{}%";
+                        row.Cells["colPhoto"].Value = LoadProductImage(book.PhotoUrl);
+                        row.Cells["colInfoBook"].Value = FormatBookInfo(book);
+                        row.Cells["colInfoCount"].Value = $"{book.Total} / {book.Avaiable}";
+
+                        if (book.Avaiable == 0)
+                        {
+                            row.DefaultCellStyle.BackColor = ColorTranslator.FromHtml("#FFCCCC");
+                        }
+                        else if (book.Avaiable == 1 || book.Avaiable == 2)
+                        {
+                            row.DefaultCellStyle.BackColor = ColorTranslator.FromHtml("#FFF3CD");
+                        }
 
                         //ApplyRowStyles(row, book);
                     }
@@ -92,16 +126,21 @@ namespace books
                     //selectedGood = null;
                 }
             }
-            catch ( Exception ex )
+            catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private object? FormatBookInfo(object product)
+        private string FormatBookInfo(Book book)
         {
-            throw new NotImplementedException();
+            return $"{book.Isbn} | {book.BookName}" + Environment.NewLine +
+                $"Автор: {book.IdAuthorNavigation.AuthorName}" + Environment.NewLine +
+                $"Жанр: {book.IdGenreNavigation.GenreName}" + Environment.NewLine +
+                $"Издатель: {book.IdPublisherNavigation.PublisherName}" + Environment.NewLine +
+                $"Год: {book.Year}" + Environment.NewLine +
+                $"Количество страниц: {book.Pages}" + Environment.NewLine +
+                $"Аннотация: {book.Annotation}";
         }
 
         private Image LoadProductImage(string photoUrl)
@@ -112,6 +151,26 @@ namespace books
             }
 
             return Resources.picture;
+        }
+
+        private void buttonLogout_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void buttonOrders_Click(object sender, EventArgs e)
+        {
+            if (!IsGuest)
+            {
+                FormOrders ordersForm = new FormOrders(CurrentUser, IsGuest, currentUserRole);
+                ordersForm.ShowDialog();
+            }
+        }
+
+        private void buttonCreate_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -52,7 +52,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1041, 64);
+            panel1.Size = new Size(1041, 58);
             panel1.TabIndex = 0;
             // 
             // buttonDelete
@@ -64,7 +64,7 @@
             buttonDelete.Location = new Point(406, 0);
             buttonDelete.Margin = new Padding(15, 3, 3, 3);
             buttonDelete.Name = "buttonDelete";
-            buttonDelete.Size = new Size(129, 64);
+            buttonDelete.Size = new Size(129, 58);
             buttonDelete.TabIndex = 5;
             buttonDelete.Text = "Удалить книгу";
             buttonDelete.UseVisualStyleBackColor = false;
@@ -78,7 +78,7 @@
             buttonUpdate.Location = new Point(258, 0);
             buttonUpdate.Margin = new Padding(15, 3, 3, 3);
             buttonUpdate.Name = "buttonUpdate";
-            buttonUpdate.Size = new Size(148, 64);
+            buttonUpdate.Size = new Size(148, 58);
             buttonUpdate.TabIndex = 4;
             buttonUpdate.Text = "Редактировать книгу";
             buttonUpdate.UseVisualStyleBackColor = false;
@@ -92,10 +92,11 @@
             buttonCreate.Location = new Point(129, 0);
             buttonCreate.Margin = new Padding(15, 3, 3, 3);
             buttonCreate.Name = "buttonCreate";
-            buttonCreate.Size = new Size(129, 64);
+            buttonCreate.Size = new Size(129, 58);
             buttonCreate.TabIndex = 3;
             buttonCreate.Text = "Добавить книгу";
             buttonCreate.UseVisualStyleBackColor = false;
+            buttonCreate.Click += buttonCreate_Click;
             // 
             // buttonOrders
             // 
@@ -105,10 +106,11 @@
             buttonOrders.ForeColor = Color.White;
             buttonOrders.Location = new Point(0, 0);
             buttonOrders.Name = "buttonOrders";
-            buttonOrders.Size = new Size(129, 64);
+            buttonOrders.Size = new Size(129, 58);
             buttonOrders.TabIndex = 2;
             buttonOrders.Text = "Посмотреть \r\nзаказы книг";
             buttonOrders.UseVisualStyleBackColor = false;
+            buttonOrders.Click += buttonOrders_Click;
             // 
             // labelFullName
             // 
@@ -130,20 +132,24 @@
             buttonLogout.ForeColor = Color.White;
             buttonLogout.Location = new Point(872, 0);
             buttonLogout.Name = "buttonLogout";
-            buttonLogout.Size = new Size(169, 64);
+            buttonLogout.Size = new Size(169, 58);
             buttonLogout.TabIndex = 0;
             buttonLogout.Text = "Выход";
             buttonLogout.UseVisualStyleBackColor = false;
+            buttonLogout.Click += buttonLogout_Click;
             // 
             // dataGridViewBook
             // 
+            dataGridViewBook.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewBook.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridViewBook.BackgroundColor = Color.White;
             dataGridViewBook.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewBook.Dock = DockStyle.Fill;
-            dataGridViewBook.Location = new Point(0, 64);
+            dataGridViewBook.Location = new Point(0, 58);
             dataGridViewBook.Name = "dataGridViewBook";
             dataGridViewBook.RowHeadersWidth = 51;
-            dataGridViewBook.Size = new Size(1041, 613);
+            dataGridViewBook.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewBook.Size = new Size(1041, 619);
             dataGridViewBook.TabIndex = 1;
             // 
             // FormBooks
@@ -157,7 +163,7 @@
             Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormBooks";
-            Text = "FormBooks";
+            Text = "Библиотека";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewBook).EndInit();
