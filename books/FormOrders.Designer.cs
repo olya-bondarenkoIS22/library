@@ -60,6 +60,7 @@
             buttonUpdate.TabIndex = 5;
             buttonUpdate.Text = "Редактировать заказ";
             buttonUpdate.UseVisualStyleBackColor = false;
+            buttonUpdate.Click += buttonUpdate_Click;
             // 
             // buttonCreate
             // 
@@ -74,6 +75,7 @@
             buttonCreate.TabIndex = 4;
             buttonCreate.Text = "Добавить заказ";
             buttonCreate.UseVisualStyleBackColor = false;
+            buttonCreate.Click += buttonCreate_Click;
             // 
             // dataGridViewHistory
             // 

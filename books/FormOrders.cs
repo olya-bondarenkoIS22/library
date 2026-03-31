@@ -14,6 +14,7 @@ namespace books
     {
         public models.User CurrentUser { get; private set; }
         public bool IsGuest { get; private set; }
+        private BookLoan selectedBookLoan;
 
         //private Order selectedOrder;
         public FormOrders(models.User user, bool quest, string currentRole)
@@ -52,10 +53,10 @@ namespace books
 
             dataGridViewHistory.Columns.AddRange(
            [
-                colUserBook, 
-                colDateOfIssue, 
-                colPlannedReturnDate, 
-                colActualReturnDate, 
+                colUserBook,
+                colDateOfIssue,
+                colPlannedReturnDate,
+                colActualReturnDate,
                 colStatus
            ]);
 
@@ -93,6 +94,8 @@ namespace books
 
                     dataGridViewHistory.SuspendLayout();
                     dataGridViewHistory.Rows.Clear();
+                    // Подключаем событие выделения строки
+                    dataGridViewHistory.SelectionChanged += DataGridViewHistory_SelectionChanged;
 
                     foreach (var book in books)
                     {
@@ -104,7 +107,7 @@ namespace books
                         row.Cells["colPlannedReturnDate"].Value = $"{book.PlannedReturnDate:dd.MM.yyyy}";
                         row.Cells["colActualReturnDate"].Value = $"{book.ActualReturnDate:dd.MM.yyyy}";
                         row.Cells["colStatus"].Value = $"{book.IdStatusNavigation.StatusName}";
-
+                        row.Tag = book;
                         // Подсветка просроченных книг (книга выдана более 30 дней назад и еще не возвращена)
                         // Если DateOfIssue не nullable
                         if (book.ActualReturnDate == null && book.DateOfIssue.HasValue)
@@ -129,11 +132,45 @@ namespace books
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void DataGridViewHistory_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewHistory.SelectedRows.Count > 0)
+            {
+                selectedBookLoan = dataGridViewHistory.SelectedRows[0].Tag as BookLoan;
+            }
+            else
+            {
+                selectedBookLoan = null;
+            }
+        }
 
         private string LoadUserBook(BookLoan bookLoan)
         {
             return $"Читатель: {bookLoan.IdUserNavigation.FullName}" + Environment.NewLine +
                 $"Книга: {bookLoan.IdBookNavigation.BookName}";
+        }
+
+        private void buttonCreate_Click(object sender, EventArgs e)
+        {
+            FormCreateOrUpdateOrders createForm = new FormCreateOrUpdateOrders(CurrentUser, IsGuest);
+            createForm.ShowDialog();
+            LoadHistory();
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            if (selectedBookLoan == null)
+            {
+                MessageBox.Show("Пожалуйста, выберите запись для редактирования.",
+                    "Предупреждение",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            FormCreateOrUpdateOrders editForm = new FormCreateOrUpdateOrders(CurrentUser, IsGuest, selectedBookLoan);
+            editForm.ShowDialog();
+            LoadHistory();
         }
     }
 }
