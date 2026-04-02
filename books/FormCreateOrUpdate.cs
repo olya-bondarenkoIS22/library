@@ -43,7 +43,6 @@ namespace books
         {
             try
             {
-                // Валидация обязательных полей
                 if (string.IsNullOrWhiteSpace(textBoxISBN.Text) ||
                     string.IsNullOrWhiteSpace(textBoxBookName.Text) ||
                     string.IsNullOrWhiteSpace(textBoxYear.Text) ||
@@ -70,7 +69,6 @@ namespace books
                     return;
                 }
 
-                // Валидация числовых значений
                 if (!int.TryParse(textBoxYear.Text, out int year) || year <= 0 || year > DateTime.Now.Year)
                 {
                     MessageBox.Show("Пожалуйста, введите корректный год (от 1 до текущего года).",
@@ -113,7 +111,6 @@ namespace books
 
                     if (isEditMode && editingBook != null)
                     {
-                        // Поиск книги для редактирования
                         book = db.Books.Find(editingBook.Id);
                         if (book == null)
                         {
@@ -126,7 +123,6 @@ namespace books
                     }
                     else
                     {
-                        // Проверка на дубликат ISBN для новой книги
                         if (db.Books.Any(b => b.Isbn == textBoxISBN.Text))
                         {
                             MessageBox.Show("Книга с таким ISBN уже существует в базе данных.",
@@ -139,7 +135,6 @@ namespace books
                         db.Books.Add(book);
                     }
 
-                    // Заполнение данных книги
                     book.Isbn = textBoxISBN.Text;
                     book.BookName = textBoxBookName.Text;
 
@@ -158,7 +153,6 @@ namespace books
                     book.Avaiable = available;
                     book.Annotation = textBoxAnnotation.Text;
 
-                    // Фото всегда null
                     book.PhotoUrl = null;
 
                     db.SaveChanges();
@@ -188,7 +182,6 @@ namespace books
             {
                 using (var db = new LibraryContext())
                 {
-                    // Загрузка справочников
                     var authors = db.Authors.OrderBy(a => a.AuthorName).ToList();
                     var genres = db.Genres.OrderBy(g => g.GenreName).ToList();
                     var publishers = db.Publishers.OrderBy(p => p.PublisherName).ToList();
@@ -215,7 +208,6 @@ namespace books
                     {
                         buttonCreateOrUpdate.Text = "Добавить";
                         this.Text = "Добавление книги";
-                        // Установка значений по умолчанию
                         textBoxTotal.Text = "1";
                         textBoxAvaiable.Text = "1";
                     }
@@ -235,7 +227,6 @@ namespace books
             textBoxISBN.Text = editingBook.Isbn;
             textBoxBookName.Text = editingBook.BookName;
 
-            // Выбор автора
             if (editingBook.IdAuthor > 0)
             {
                 var author = db.Authors.FirstOrDefault(a => a.Id == editingBook.IdAuthor);
@@ -243,7 +234,6 @@ namespace books
                     comboBoxAuthor.SelectedItem = author;
             }
 
-            // Выбор жанра
             if (editingBook.IdGenre > 0)
             {
                 var genre = db.Genres.FirstOrDefault(g => g.Id == editingBook.IdGenre);
@@ -251,7 +241,6 @@ namespace books
                     comboBoxGenre.SelectedItem = genre;
             }
 
-            // Выбор издателя
             if (editingBook.IdPublisher > 0)
             {
                 var publisher = db.Publishers.FirstOrDefault(p => p.Id == editingBook.IdPublisher);

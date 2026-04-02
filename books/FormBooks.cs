@@ -19,9 +19,8 @@ namespace books
         private string currentUserRole;
         private Book selectedBook;
 
-        // Переменные для поиска, сортировки и фильтрации
         private string searchText = "";
-        private string sortOrder = "asc"; // asc или desc
+        private string sortOrder = "asc"; 
         private int? selectedPublisherId = null;
 
         public FormBooks(models.User user, bool quest)
@@ -63,25 +62,22 @@ namespace books
 
             LoadRole();
 
-            // Настройка видимости элементов в зависимости от роли
             if (IsGuest || currentUserRole == "Библиотекарь")
             {
-                // Гости и библиотекари не могут редактировать, добавлять и удалять
-                buttonOrders.Visible = !IsGuest; // Только для библиотекаря (не для гостя)
+                buttonOrders.Visible = !IsGuest; 
                 buttonCreate.Visible = false;
                 buttonUpdate.Visible = false;
                 buttonDelete.Visible = false;
-                panelSearchFilter.Visible = false; // Скрываем панель поиска
+                panelSearchFilter.Visible = false; 
             }
 
-            // Только администратор имеет полный доступ
             if (currentUserRole == "Администратор")
             {
                 buttonOrders.Visible = true;
                 buttonCreate.Visible = true;
                 buttonUpdate.Visible = true;
                 buttonDelete.Visible = true;
-                panelSearchFilter.Visible = true; // Показываем панель поиска для администратора
+                panelSearchFilter.Visible = true; 
                 InitializeSearchFilter();
             }
 
@@ -94,12 +90,10 @@ namespace books
 
         private void InitializeSearchFilter()
         {
-            // Настройка ComboBox для фильтрации по издателю
             using (var db = new LibraryContext())
             {
                 var publishers = db.Publishers.OrderBy(p => p.PublisherName).ToList();
 
-                // Добавляем пункт "Все издатели" в начало списка
                 var publisherList = new List<models.Publisher> { new models.Publisher { Id = 0, PublisherName = "Все издатели" } };
                 publisherList.AddRange(publishers);
 
@@ -110,13 +104,11 @@ namespace books
                 comboBoxPublisherFilter.SelectedIndex = 0;
             }
 
-            // Настройка ComboBox для сортировки
             comboBoxSort.Items.Clear();
             comboBoxSort.Items.Add("По возрастанию (по количеству)");
             comboBoxSort.Items.Add("По убыванию (по количеству)");
             comboBoxSort.SelectedIndex = 0;
 
-            // Подключаем обработчики событий
             textBoxSearch.TextChanged += textBoxSearch_TextChanged;
             comboBoxSort.SelectedIndexChanged += comboBoxSort_SelectedIndexChanged;
             comboBoxPublisherFilter.SelectedIndexChanged += comboBoxPublisherFilter_SelectedIndexChanged;
@@ -148,13 +140,11 @@ namespace books
                         .Include(p => p.IdPublisherNavigation)
                         .AsQueryable();
 
-                    // Применяем фильтр по издателю (только для администратора)
                     if (currentUserRole == "Администратор" && selectedPublisherId.HasValue && selectedPublisherId.Value > 0)
                     {
                         query = query.Where(p => p.IdPublisher == selectedPublisherId.Value);
                     }
 
-                    // Применяем поиск (по всем текстовым полям) - только для администратора
                     if (currentUserRole == "Администратор" && !string.IsNullOrWhiteSpace(searchText))
                     {
                         query = query.Where(p =>
@@ -169,7 +159,6 @@ namespace books
                         );
                     }
 
-                    // Применяем сортировку по количеству на складе (Avaiable) - только для администратора
                     if (currentUserRole == "Администратор")
                     {
                         if (sortOrder == "asc")
@@ -183,7 +172,6 @@ namespace books
                     }
                     else
                     {
-                        // Для остальных сортировка по Id
                         query = query.OrderBy(p => p.Id);
                     }
 
@@ -197,7 +185,6 @@ namespace books
                         int rowIndex = dataGridViewBook.Rows.Add();
                         var row = dataGridViewBook.Rows[rowIndex];
 
-                        // Сохраняем объект товара в Tag строки для удобства
                         row.Tag = book;
                         row.Cells["colPhoto"].Value = LoadProductImage(book.PhotoUrl);
                         row.Cells["colInfoBook"].Value = FormatBookInfo(book);
@@ -219,7 +206,6 @@ namespace books
                     dataGridViewBook.ClearSelection();
                     selectedBook = null;
 
-                    // Обновляем информацию о количестве найденных записей (только для администратора)
                     if (currentUserRole == "Администратор" && labelRecordsCount != null)
                     {
                         labelRecordsCount.Text = $"Найдено записей: {books.Count}";
@@ -233,14 +219,12 @@ namespace books
             }
         }
 
-        // Поиск
         private void textBoxSearch_TextChanged(object sender, EventArgs e)
         {
             searchText = textBoxSearch.Text;
             LoadBooks();
         }
 
-        // Сортировка
         private void comboBoxSort_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxSort.SelectedIndex == 0)
@@ -254,14 +238,12 @@ namespace books
             LoadBooks();
         }
 
-        // Фильтр по издателю
         private void comboBoxPublisherFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxPublisherFilter.SelectedItem is models.Publisher selectedPublisher)
             {
                 if (selectedPublisher.Id == 0)
                 {
-                    // Выбран "Все издатели" - сбрасываем фильтр
                     selectedPublisherId = null;
                 }
                 else
@@ -272,13 +254,11 @@ namespace books
             }
         }
 
-        // Кнопка сброса фильтров
         private void buttonResetFilters_Click(object sender, EventArgs e)
         {
             textBoxSearch.Text = "";
             comboBoxSort.SelectedIndex = 0;
             comboBoxPublisherFilter.SelectedIndex = 0;
-            // События сработают автоматически и обновят данные
         }
 
         private void ConfigureDgvProducts()

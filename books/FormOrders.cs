@@ -16,7 +16,6 @@ namespace books
         public bool IsGuest { get; private set; }
         private BookLoan selectedBookLoan;
 
-        //private Order selectedOrder;
         public FormOrders(models.User user, bool quest, string currentRole)
         {
             InitializeComponent();
@@ -94,7 +93,6 @@ namespace books
 
                     dataGridViewHistory.SuspendLayout();
                     dataGridViewHistory.Rows.Clear();
-                    // Подключаем событие выделения строки
                     dataGridViewHistory.SelectionChanged += DataGridViewHistory_SelectionChanged;
 
                     foreach (var book in books)
@@ -103,16 +101,14 @@ namespace books
                         var row = dataGridViewHistory.Rows[rowIndex];
 
                         row.Cells["colUserBook"].Value = LoadUserBook(book);
-                        row.Cells["colDateOfIssue"].Value = $"{book.DateOfIssue:dd.MM.yyyy}";//LoadDateOfIssue(book.DateOfIssue);
+                        row.Cells["colDateOfIssue"].Value = $"{book.DateOfIssue:dd.MM.yyyy}";
                         row.Cells["colPlannedReturnDate"].Value = $"{book.PlannedReturnDate:dd.MM.yyyy}";
                         row.Cells["colActualReturnDate"].Value = $"{book.ActualReturnDate:dd.MM.yyyy}";
                         row.Cells["colStatus"].Value = $"{book.IdStatusNavigation.StatusName}";
                         row.Tag = book;
-                        // Подсветка просроченных книг (книга выдана более 30 дней назад и еще не возвращена)
-                        // Если DateOfIssue не nullable
+                        
                         if (book.ActualReturnDate == null && book.DateOfIssue.HasValue)
                         {
-                            // Альтернативный способ вычисления разницы дат
                             DateTime currentDate = DateTime.Now.Date;
                             DateTime dateOfIssue = new DateTime(book.DateOfIssue.Value.Year,
                                                                book.DateOfIssue.Value.Month,
@@ -120,7 +116,7 @@ namespace books
                             TimeSpan daysSinceIssue = currentDate - dateOfIssue;
                             if (daysSinceIssue.TotalDays > 30)
                             {
-                                row.DefaultCellStyle.BackColor = ColorTranslator.FromHtml("#D4EDDA"); // #D4EDDA
+                                row.DefaultCellStyle.BackColor = ColorTranslator.FromHtml("#D4EDDA"); 
                             }
                         }
                     }

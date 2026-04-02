@@ -17,7 +17,6 @@ namespace books
         private BookLoan editingBookLoan;
         private bool isEditMode;
 
-        // Конструктор для добавления новой выдачи
         public FormCreateOrUpdateOrders(models.User user, bool quest)
         {
             InitializeComponent();
@@ -27,7 +26,6 @@ namespace books
             this.Load += FormCreateOrUpdateOrders_Load;
         }
 
-        // Конструктор для редактирования существующей выдачи
         public FormCreateOrUpdateOrders(models.User user, bool quest, BookLoan bookLoanToEdit)
         {
             InitializeComponent();
@@ -42,7 +40,6 @@ namespace books
         {
             try
             {
-                // Валидация обязательных полей
                 if (comboBoxUser.SelectedItem == null)
                 {
                     MessageBox.Show("Пожалуйста, выберите читателя.",
@@ -76,7 +73,6 @@ namespace books
 
                     if (isEditMode && editingBookLoan != null)
                     {
-                        // Поиск выдачи для редактирования
                         bookLoan = db.BookLoans.Find(editingBookLoan.Id);
                         if (bookLoan == null)
                         {
@@ -89,7 +85,6 @@ namespace books
                     }
                     else
                     {
-                        // Проверка на дубликат (книга уже выдана этому читателю и не возвращена)
                         models.User selectedUser = (models.User)comboBoxUser.SelectedItem;
                         Book selectedBook = (Book)comboBoxBook.SelectedItem;
 
@@ -111,18 +106,15 @@ namespace books
                         db.BookLoans.Add(bookLoan);
                     }
 
-                    // Заполнение данных выдачи
                     models.User selectedUserForLoan = (models.User)comboBoxUser.SelectedItem;
                     bookLoan.IdUser = selectedUserForLoan.Id;
 
                     Book selectedBookForLoan = (Book)comboBoxBook.SelectedItem;
                     bookLoan.IdBook = selectedBookForLoan.Id;
 
-                    // Преобразование DateTime в DateOnly
                     bookLoan.DateOfIssue = DateOnly.FromDateTime(dateTimePickerOfIssue.Value);
                     bookLoan.PlannedReturnDate = DateOnly.FromDateTime(dateTimePickerPlannedReturnDate.Value);
 
-                    // Фактическая дата возврата - берем из DateTimePicker
                     bookLoan.ActualReturnDate = DateOnly.FromDateTime(dateTimePickerActualReturnDate.Value);
 
                     models.Status selectedStatus = (models.Status)comboBoxStatus.SelectedItem;
@@ -155,7 +147,6 @@ namespace books
             {
                 using (var db = new LibraryContext())
                 {
-                    // Загрузка справочников
                     var users = db.Users.OrderBy(u => u.FullName).ToList();
                     var books = db.Books.OrderBy(b => b.BookName).ToList();
                     var statuses = db.Statuses.OrderBy(s => s.Id).ToList();
@@ -172,7 +163,6 @@ namespace books
                     comboBoxStatus.DisplayMember = "StatusName";
                     comboBoxStatus.ValueMember = "Id";
 
-                    // Настройка DateTimePicker
                     dateTimePickerOfIssue.Value = DateTime.Now;
                     dateTimePickerPlannedReturnDate.Value = DateTime.Now.AddDays(14);
                     dateTimePickerActualReturnDate.Value = DateTime.Now;
@@ -201,7 +191,6 @@ namespace books
 
         private void LoadBookLoanData(LibraryContext db)
         {
-            // Выбор читателя
             if (editingBookLoan.IdUser > 0)
             {
                 var user = db.Users.FirstOrDefault(u => u.Id == editingBookLoan.IdUser);
@@ -209,7 +198,6 @@ namespace books
                     comboBoxUser.SelectedItem = user;
             }
 
-            // Выбор книги
             if (editingBookLoan.IdBook > 0)
             {
                 var book = db.Books.FirstOrDefault(b => b.Id == editingBookLoan.IdBook);
@@ -217,20 +205,17 @@ namespace books
                     comboBoxBook.SelectedItem = book;
             }
 
-            // Заполнение дат
             if (editingBookLoan.DateOfIssue.HasValue)
                 dateTimePickerOfIssue.Value = editingBookLoan.DateOfIssue.Value.ToDateTime(TimeOnly.MinValue);
 
             if (editingBookLoan.PlannedReturnDate.HasValue)
                 dateTimePickerPlannedReturnDate.Value = editingBookLoan.PlannedReturnDate.Value.ToDateTime(TimeOnly.MinValue);
 
-            // Заполнение фактической даты возврата
             if (editingBookLoan.ActualReturnDate.HasValue)
             {
                 dateTimePickerActualReturnDate.Value = editingBookLoan.ActualReturnDate.Value.ToDateTime(TimeOnly.MinValue);
             }
 
-            // Выбор статуса
             if (editingBookLoan.IdStatus > 0)
             {
                 var status = db.Statuses.FirstOrDefault(s => s.Id == editingBookLoan.IdStatus);
